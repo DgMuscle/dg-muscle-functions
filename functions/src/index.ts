@@ -12,4 +12,4 @@ initializeApp();
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
-exports.postExercise = require("./exercise");
+exports.exercise = require("./exercise");
