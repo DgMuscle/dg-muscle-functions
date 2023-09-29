@@ -7,93 +7,96 @@ export const deleteExercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id: string = req.body["id"];
 
-  if (typeof uid == 'undefined') {
+  if (typeof uid == "undefined") {
     res.json({
       ok: false,
-      message: "authentication error"
+      message: "authentication error",
     });
   }
 
   if (id == null) {
     res.json({
       ok: false,
-      message: "id is required"
+      message: "id is required",
     });
   }
 
-  await db.collection("users").doc(uid!).collection("exercises").doc(id).delete();
+  await db.collection("users")
+    .doc(uid ?? "")
+    .collection("exercises")
+    .doc(id)
+    .delete();
 
   res.json({
-    ok: true
+    ok: true,
   });
 });
 
 export const getExercises = onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const ref = db.collection("users").doc(uid!).collection("exercises");
-  
-  if (typeof uid == 'undefined') {
+  const ref = db.collection("users").doc(uid ?? "").collection("exercises");
+  if (typeof uid == "undefined") {
     res.json({
       ok: false,
-      message: "authentication error"
+      message: "authentication error",
     });
   }
 
   const snapshot = await ref.get();
-  const data = snapshot.docs.map(doc => doc.data());
-  
+  const data = snapshot.docs.map((doc) => doc.data());
+
   res.json({
-    data
+    data,
   });
 });
 
 export const postExercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const exercise_id: string = req.body["id"];
-  const exercise_name: string = req.body["name"];
-  const exercise_parts: string[] = req.body["parts"] ?? [];
-  const exercise_order: number = req.body["order"];
+  const exerciseId: string = req.body["id"];
+  const exerciseName: string = req.body["name"];
+  const exerciseParts: string[] = req.body["parts"] ?? [];
+  const exerciseOrder: number = req.body["order"];
   const favorite: boolean = req.body["favorite"] ?? false;
 
-  if (typeof uid == 'undefined') {
+  if (typeof uid == "undefined") {
     res.json({
       ok: false,
-      message: "authentication error"
+      message: "authentication error",
     });
   }
-  
-  if (exercise_id == null || exercise_name == null || exercise_order == null) {
+
+  if (exerciseId == null || exerciseName == null || exerciseOrder == null) {
     res.json({
       ok: false,
-      message: "exercise requires id, name, order"
+      message: "exercise requires id, name, order",
     });
   }
-  
-  if (typeof(exercise_order) != "number") {
+
+  if (typeof(exerciseOrder) != "number") {
     res.json({
       ok: false,
-      message: "exercise order must be integer number"
+      message: "exercise order must be integer number",
     });
   }
-  
+
   if (typeof(favorite) != "boolean") {
     res.json({
-      ok: false, 
-      message: "favorite must be boolean"
+      ok: false,
+      message: "favorite must be boolean",
     });
   }
-  
+
   const data = {
-    id: exercise_id,
-    name: exercise_name,
-    parts: exercise_parts,
-    order: exercise_order,
+    id: exerciseId,
+    name: exerciseName,
+    parts: exerciseParts,
+    order: exerciseOrder,
     favorite,
-    created_at: FieldValue.serverTimestamp()
+    created_at: FieldValue.serverTimestamp(),
   };
-  
-  await db.collection(`users/${uid}/exercises`).doc(exercise_id).set(data);
+
+  await db.collection(`users/${uid}/exercises`).doc(exerciseId).set(data);
   res.json({
-    ok: true
+    ok: true,
   });
 });
