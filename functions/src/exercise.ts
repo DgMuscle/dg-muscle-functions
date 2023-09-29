@@ -5,7 +5,7 @@ const db = getFirestore();
 
 export const deleteExercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const id = req.body["id"];
+  const id: string = req.body["id"];
 
   if (typeof uid == 'undefined') {
     res.json({
@@ -52,7 +52,7 @@ export const postExercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const exercise_id: string = req.body["id"];
   const exercise_name: string = req.body["name"];
-  const exercise_part: string = req.body["part"];
+  const exercise_parts: string[] = req.body["parts"] ?? [];
   const exercise_order: number = req.body["order"];
   const favorite: boolean = req.body["favorite"] ?? false;
 
@@ -87,7 +87,7 @@ export const postExercise = onRequest(async (req, res) => {
   const data = {
     id: exercise_id,
     name: exercise_name,
-    part: exercise_part,
+    parts: exercise_parts,
     order: exercise_order,
     favorite,
     created_at: FieldValue.serverTimestamp()
