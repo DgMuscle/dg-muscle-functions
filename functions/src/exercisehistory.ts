@@ -51,6 +51,7 @@ export const postHistory = onRequest(async (req, res) => {
   const id: string = req.body["id"];
   const date: string = req.body["date"];
   const records: Record[] = req.body["records"] ?? [];
+  const memo: string | undefined = req.body["memo"];
 
   if (typeof uid == "undefined") {
     res.json({
@@ -70,6 +71,7 @@ export const postHistory = onRequest(async (req, res) => {
     id,
     date,
     records,
+    memo,
     createdAt: FieldValue.serverTimestamp(),
   };
 
