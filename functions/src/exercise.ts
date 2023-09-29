@@ -92,7 +92,7 @@ export const postExercise = onRequest(async (req, res) => {
     parts: exerciseParts,
     order: exerciseOrder,
     favorite,
-    created_at: FieldValue.serverTimestamp(),
+    createdAt: FieldValue.serverTimestamp(),
   };
 
   await db.collection(`users/${uid}/exercises`).doc(exerciseId).set(data);
