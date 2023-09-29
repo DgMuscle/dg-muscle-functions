@@ -34,7 +34,7 @@ export const deleteExercise = onRequest(async (req, res) => {
 
 export const getExercises = onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const ref = db.collection("users").doc(uid ?? "").collection("exercises");
+
   if (typeof uid == "undefined") {
     res.json({
       ok: false,
@@ -42,6 +42,7 @@ export const getExercises = onRequest(async (req, res) => {
     });
   }
 
+  const ref = db.collection("users").doc(uid ?? "").collection("exercises");
   const snapshot = await ref.get();
   const data = snapshot.docs.map((doc) => doc.data());
 

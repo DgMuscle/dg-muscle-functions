@@ -14,6 +14,33 @@ interface Record {
     sets: [Set];
 }
 
+export const getHistories = onRequest(async (req, res) => {
+    const uid = req.get("uid");
+    const lastId = req.query.lastId;
+
+    if (typeof uid == "undefined") {
+        res.json({
+            ok: false,
+            message: "authentication error",
+        });
+    }
+
+    let ref = db.collection("users").doc(uid ?? "").collection("histories").orderBy("date", "desc");
+
+    if (typeof lastId == "string") {
+        const previousSnapshot = await db.collection("users").doc(uid ?? "").collection("histories").doc(lastId).get();
+        ref = ref.startAfter(previousSnapshot);
+    }
+
+    const snapshot = await ref.limit(100).get();
+
+    const data = snapshot.docs.map((doc) => doc.data());
+
+    res.json({
+        data
+    });
+});
+
 export const postHistory = onRequest(async (req, res) => {
     const uid = req.get("uid");
     const id: string = req.body["id"];
@@ -47,21 +74,3 @@ export const postHistory = onRequest(async (req, res) => {
         ok: true,
     });
 });
-
-const exerciseHistory = {
-    id: "asdlkasldjaklsjd",
-    date: "20230929",
-    records: [
-        {
-            exerciseId: "squat",
-            sets: [
-                {
-                    weight: 50,
-                    unit: "kg",
-                    reps: 12
-                }
-            ]
-        }
-    ],
-    createdAt: 2897123798
-};
