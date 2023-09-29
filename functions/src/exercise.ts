@@ -48,7 +48,6 @@ export const getExercises = onRequest(async (req, res) => {
 });
 
 export const postExercise = onRequest(async (req, res) => {
-
   const uid = req.get("uid");
   const exercise_id: string = req.body["id"];
   const exercise_name: string = req.body["name"];
