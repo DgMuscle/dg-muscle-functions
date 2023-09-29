@@ -13,3 +13,4 @@ initializeApp();
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 exports.exercise = require("./exercise");
+exports.exercisehistory = require("./exercisehistory");
