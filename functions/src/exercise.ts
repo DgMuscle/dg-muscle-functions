@@ -46,9 +46,7 @@ export const getExercises = onRequest(async (req, res) => {
   const snapshot = await ref.get();
   const data = snapshot.docs.map((doc) => doc.data());
 
-  res.json({
-    data,
-  });
+  res.json(data);
 });
 
 export const postExercise = onRequest(async (req, res) => {

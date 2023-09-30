@@ -41,9 +41,7 @@ export const getHistories = onRequest(async (req, res) => {
 
   const data = snapshot.docs.map((doc) => doc.data());
 
-  res.json({
-    data,
-  });
+  res.json(data);
 });
 
 export const postHistory = onRequest(async (req, res) => {
