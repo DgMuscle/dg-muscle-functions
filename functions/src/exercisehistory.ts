@@ -14,6 +14,35 @@ interface Record {
     sets: [Set];
 }
 
+export const deleteHistory = onRequest(async (req, res) => {
+  const uid = req.get("uid");
+  const id = req.body.id;
+
+  if (uid == undefined) {
+    res.json({
+      ok: false,
+      message: "authentication error",
+    });
+  }
+
+  if (id == undefined) {
+    res.json({
+      ok: false,
+      message: "id is required",
+    });
+  }
+
+  await db.collection("users")
+    .doc(uid ?? "")
+    .collection("histories")
+    .doc(id)
+    .delete();
+
+  res.json({
+    ok: true,
+  });
+});
+
 export const getHistories = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const lastId = req.query.lastId;
