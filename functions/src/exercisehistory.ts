@@ -65,13 +65,24 @@ export const postHistory = onRequest(async (req, res) => {
     });
   }
 
-  const data = {
+  interface Data {
+    id: string;
+    date: string;
+    records: Record[];
+    createdAt: FieldValue;
+    memo?: string;
+  }
+
+  const data: Data = {
     id,
     date,
     records,
-    memo,
     createdAt: FieldValue.serverTimestamp(),
   };
+
+  if (memo != undefined) {
+    data.memo = memo;
+  }
 
   await db.collection(`users/${uid}/histories`).doc(id).set(data);
 
