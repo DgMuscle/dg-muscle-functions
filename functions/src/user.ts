@@ -22,7 +22,7 @@ export const postProfile = onRequest(async (req, res) => {
   interface BodySpec {
     weight: number;
     height: number;
-    createdAt?: FieldValue;
+    createdAt: string;
   };
 
   interface Profile {
@@ -30,9 +30,11 @@ export const postProfile = onRequest(async (req, res) => {
     displayName: string;
     photoURL?: string;
     specs: BodySpec[];
+    updatedAt?: FieldValue;
   };
   const uid = req.get("uid");
   let profile: Profile = req.body;
+  profile.updatedAt = FieldValue.serverTimestamp();
 
   if (typeof uid == "undefined") {
     res.json({
@@ -40,13 +42,6 @@ export const postProfile = onRequest(async (req, res) => {
       message: "authentication error",
     });
   }
-
-  profile.specs = profile.specs.map((spec) => {
-    if (typeof spec.createdAt == "undefined") {
-      spec.createdAt = FieldValue.serverTimestamp();
-    };
-    return spec
-  });
 
   await db.collection(`users`).doc(uid ?? "").set(profile);
 
