@@ -49,6 +49,108 @@ export const getExercises = onRequest(async (req, res) => {
   res.json(data);
 });
 
+// Override exercise datas by exercises of req.body
+export const setExercises = onRequest(async (req, res) => {
+  interface Exercise {
+    id: string;
+    name: string;
+    parts: string[];
+    favorite: boolean;
+    order: number;
+    createdAt?: FieldValue;
+  }
+
+  const uid = req.get("uid");
+  let exercises: Exercise[] = req.body;
+
+  if (typeof uid == "undefined") {
+    res.json({
+      ok: false,
+      message: "authentication error",
+    });
+  }
+
+  exercises = exercises.map((exercise) => {
+    if (typeof exercise.createdAt == "undefined") {
+      exercise.createdAt = FieldValue.serverTimestamp();
+    }
+    return exercise;
+  });
+
+  await deleteCollection(db, `users/${uid}/exercises`);
+
+  const promises = exercises.map((exercise) => {
+    db.collection(`users/${uid}/exercises`).doc(exercise.id).set(exercise);
+  });
+
+  await Promise.all(promises);
+
+  res.json({
+    ok: true,
+  });
+});
+
+/**
+ * Represents a deleteCollection.
+ * @constructor
+ * @param {FirebaseFirestore.Firestore} db - The db of firestore.
+ * @param {string} collectionPath - The path of collection to remove
+ */
+async function deleteCollection(
+  db: FirebaseFirestore.Firestore,
+  collectionPath: string
+) {
+  const collectionRef = db.collection(collectionPath);
+  const query = collectionRef;
+
+  return new Promise((resolve, reject) => {
+    deleteQueryBatch(db, query, resolve).catch(reject);
+  });
+}
+
+/**
+ * @callback resolve
+ * @param  {unknown?} value   - Index of array element
+ */
+
+/**
+ * Represents a deleteQueryBatch.
+ * @constructor
+ * @param {FirebaseFirestore.Firestore} db - The db of firestore.
+ * @param {
+ * FirebaseFirestore.Query<FirebaseFirestore.DocumentData>
+ * } query - The query to conduct.
+ * @param {resolve} resolve - The resolve function.
+ * @return {void} - Return of resulve callback.
+ */
+async function deleteQueryBatch(
+  db: FirebaseFirestore.Firestore,
+  query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>,
+  resolve: (value?: unknown) => void
+) {
+  const snapshot = await query.get();
+
+  const batchSize = snapshot.size;
+  if (batchSize === 0) {
+    // When there are no documents left, we are done
+    resolve();
+    return;
+  }
+
+  // Delete documents in a batch
+  const batch = db.batch();
+  snapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+  await batch.commit();
+
+  // Recurse on the next process tick, to avoid
+  // exploding the stack.
+  process.nextTick(() => {
+    deleteQueryBatch(db, query, resolve);
+  });
+}
+
 export const postExercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const exerciseId: string = req.body["id"];
