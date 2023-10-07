@@ -52,16 +52,16 @@ export const getExercises = onRequest(async (req, res) => {
 // Override exercise datas by exercises of req.body
 export const setExercises = onRequest(async (req, res) => {
   interface Exercise {
-    id: string,
-    name: string,
-    parts: string[],
-    favorite: boolean,
-    order: number,
-    createdAt?: FieldValue,
+    id: string;
+    name: string;
+    parts: string[];
+    favorite: boolean;
+    order: number;
+    createdAt?: FieldValue;
   };
 
   const uid = req.get("uid");
-  const exercises: Exercise[] = req.body;
+  let exercises: Exercise[] = req.body;
 
   if (typeof uid == "undefined") {
     res.json({
@@ -69,6 +69,13 @@ export const setExercises = onRequest(async (req, res) => {
       message: "authentication error",
     });
   }
+
+  exercises = exercises.map((exercise) => {
+    if (typeof exercise.createdAt == "undefined") {
+      exercise.createdAt = FieldValue.serverTimestamp();
+    }
+    return exercise;
+  });
 
   await deleteCollection(db, `users/${uid}/exercises`)
 
