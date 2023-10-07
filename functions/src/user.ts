@@ -23,7 +23,7 @@ export const postProfile = onRequest(async (req, res) => {
     weight: number;
     height: number;
     createdAt: string;
-  };
+  }
 
   interface Profile {
     id: string;
@@ -31,9 +31,10 @@ export const postProfile = onRequest(async (req, res) => {
     photoURL?: string;
     specs: BodySpec[];
     updatedAt?: FieldValue;
-  };
+  }
+
   const uid = req.get("uid");
-  let profile: Profile = req.body;
+  const profile: Profile = req.body;
   profile.updatedAt = FieldValue.serverTimestamp();
 
   if (typeof uid == "undefined") {
@@ -43,7 +44,7 @@ export const postProfile = onRequest(async (req, res) => {
     });
   }
 
-  await db.collection(`users`).doc(uid ?? "").set(profile);
+  await db.collection("users").doc(uid ?? "").set(profile);
 
   res.json({
     ok: true,

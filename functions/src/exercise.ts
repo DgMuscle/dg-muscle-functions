@@ -58,7 +58,7 @@ export const setExercises = onRequest(async (req, res) => {
     favorite: boolean;
     order: number;
     createdAt?: FieldValue;
-  };
+  }
 
   const uid = req.get("uid");
   let exercises: Exercise[] = req.body;
@@ -77,9 +77,9 @@ export const setExercises = onRequest(async (req, res) => {
     return exercise;
   });
 
-  await deleteCollection(db, `users/${uid}/exercises`)
+  await deleteCollection(db, `users/${uid}/exercises`);
 
-  let promises = exercises.map((exercise) => {
+  const promises = exercises.map((exercise) => {
     db.collection(`users/${uid}/exercises`).doc(exercise.id).set(exercise);
   });
 
@@ -90,7 +90,16 @@ export const setExercises = onRequest(async (req, res) => {
   });
 });
 
-async function deleteCollection(db: FirebaseFirestore.Firestore, collectionPath: string) {
+/**
+ * Represents a deleteCollection.
+ * @constructor
+ * @param {FirebaseFirestore.Firestore} db - The db of firestore.
+ * @param {string} collectionPath - The path of collection to remove
+ */
+async function deleteCollection(
+  db: FirebaseFirestore.Firestore,
+  collectionPath: string
+) {
   const collectionRef = db.collection(collectionPath);
   const query = collectionRef;
 
@@ -99,7 +108,26 @@ async function deleteCollection(db: FirebaseFirestore.Firestore, collectionPath:
   });
 }
 
-async function deleteQueryBatch(db: FirebaseFirestore.Firestore, query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, resolve: (value?: unknown) => void) {
+/**
+ * @callback resolve
+ * @param  {unknown?} value   - Index of array element
+ */
+
+/**
+ * Represents a deleteQueryBatch.
+ * @constructor
+ * @param {FirebaseFirestore.Firestore} db - The db of firestore.
+ * @param {
+ * FirebaseFirestore.Query<FirebaseFirestore.DocumentData>
+ * } query - The query to conduct.
+ * @param {resolve} resolve - The resolve function.
+ * @return {void} - Return of resulve callback.
+ */
+async function deleteQueryBatch(
+  db: FirebaseFirestore.Firestore,
+  query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>,
+  resolve: (value?: unknown) => void
+) {
   const snapshot = await query.get();
 
   const batchSize = snapshot.size;
