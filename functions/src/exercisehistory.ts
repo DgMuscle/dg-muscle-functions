@@ -46,6 +46,7 @@ export const deleteHistory = onRequest(async (req, res) => {
 export const getHistories = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const lastId = req.query.lastId;
+  const limit = req.query.limit ?? "365";
 
   if (typeof uid == "undefined") {
     res.json({
@@ -66,8 +67,7 @@ export const getHistories = onRequest(async (req, res) => {
     ref = ref.startAfter(previousSnapshot);
   }
 
-  const snapshot = await ref.limit(100).get();
-
+  const snapshot = await ref.limit(Number(limit)).get();
   const data = snapshot.docs.map((doc) => doc.data());
 
   res.json(data);
