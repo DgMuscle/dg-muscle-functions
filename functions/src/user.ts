@@ -19,17 +19,10 @@ export const getProfile = onRequest(async (req, res) => {
 });
 
 export const postProfile = onRequest(async (req, res) => {
-  interface BodySpec {
-    weight: number;
-    height: number;
-    createdAt: string;
-  }
-
   interface Profile {
     id: string;
     displayName: string;
     photoURL?: string;
-    specs: BodySpec[];
     updatedAt?: FieldValue;
   }
 
