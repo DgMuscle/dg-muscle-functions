@@ -19,7 +19,6 @@ export const getProfile = onRequest(async (req, res) => {
 });
 
 export const postProfile = onRequest(async (req, res) => {
-
   interface Profile {
     id: string;
     displayName: string;
