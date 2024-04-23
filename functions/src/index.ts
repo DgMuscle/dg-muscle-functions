@@ -15,3 +15,7 @@ initializeApp();
 exports.exercise = require("./exercise");
 exports.exercisehistory = require("./exercisehistory");
 exports.user = require("./user");
+
+exports.exercisev2 = require("./v2/exercisev2");
+exports.exercisehistoryv2 = require("./v2/exercisehistoryv2");
+exports.userv2 = require("./v2/userv2");
