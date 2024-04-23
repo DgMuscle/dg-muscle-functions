@@ -1,9 +1,14 @@
-const functions = require("firebase-functions");
+// The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
+const {logger} = require("firebase-functions");
+const {onRequest} = require("firebase-functions/v2/https");
+const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// The Firebase Admin SDK to access Firestore.
+const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
+
+initializeApp();
+
+exports.addmessage = onRequest(async (req, res) => {
+  res.json({result: "hello world"});
+});
