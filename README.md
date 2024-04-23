@@ -3,7 +3,7 @@
 # environment
 
 ```
-node: 'v18.20.2', npm: '10.5.0'
+node v16.20.2 (npm v8.19.4)
 ```
 
 Bulk Update of nodejs package.json
