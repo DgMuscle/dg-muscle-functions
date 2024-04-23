@@ -49,3 +49,9 @@ export const postprofile = onRequest(async (req, res) => {
     ok: true,
   });
 });
+
+export const test2 = onRequest(async (req, res) => {
+  res.json({
+    ok: false,
+  });
+});
