@@ -19,8 +19,8 @@ export const getprofile = onRequest(async (req, res) => {
 });
 
 export const getprofiles = onRequest(async (req, res) => {
-  const snapshot = await db.collection("users").get()
-  let datas = snapshot.docs.map((doc) => doc.data());
+  const snapshot = await db.collection("users").get();
+  const datas = snapshot.docs.map((doc) => doc.data());
   res.json(datas);
 });
 
