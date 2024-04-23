@@ -18,7 +18,7 @@ export const getProfile = onRequest(async (req, res) => {
   res.json(data);
 });
 
-export const getProfiles = onRequest(async (req, res) => {
+export const get_profiles = onRequest(async (req, res) => {
   const snapshot = await db.collection("users").get()
   let datas = snapshot.docs.map(doc => {
     doc.data();
