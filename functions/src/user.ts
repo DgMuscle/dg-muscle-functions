@@ -18,6 +18,14 @@ export const getProfile = onRequest(async (req, res) => {
   res.json(data);
 });
 
+export const getProfiles = onRequest(async (req, res) => {
+  const snapshot = await db.collection("users").get()
+  let datas = snapshot.docs.map(doc => {
+    doc.data();
+  })
+  res.json(datas);
+});
+
 export const postProfile = onRequest(async (req, res) => {
   interface Profile {
     id: string;
