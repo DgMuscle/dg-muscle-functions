@@ -3,7 +3,7 @@ import {getFirestore, FieldValue} from "firebase-admin/firestore";
 
 const db = getFirestore();
 
-export const delete_exercise = onRequest(async (req, res) => {
+export const deleteexercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id: string = req.body["id"];
 
@@ -32,7 +32,7 @@ export const delete_exercise = onRequest(async (req, res) => {
   });
 });
 
-export const get_exercises = onRequest(async (req, res) => {
+export const getexercises = onRequest(async (req, res) => {
   const uid = req.get("uid");
 
   if (typeof uid == "undefined") {
@@ -50,7 +50,7 @@ export const get_exercises = onRequest(async (req, res) => {
 });
 
 // Override exercise datas by exercises of req.body
-export const set_exercises = onRequest(async (req, res) => {
+export const setexercises = onRequest(async (req, res) => {
   interface Exercise {
     id: string;
     name: string;
@@ -151,7 +151,7 @@ async function deleteQueryBatch(
   });
 }
 
-export const post_exercise = onRequest(async (req, res) => {
+export const postexercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const exerciseId: string = req.body["id"];
   const exerciseName: string = req.body["name"];

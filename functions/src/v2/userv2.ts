@@ -3,7 +3,7 @@ import {getFirestore, FieldValue} from "firebase-admin/firestore";
 
 const db = getFirestore();
 
-export const get_profile = onRequest(async (req, res) => {
+export const getprofile = onRequest(async (req, res) => {
   const uid = req.get("uid");
 
   if (typeof uid == "undefined") {
@@ -18,13 +18,13 @@ export const get_profile = onRequest(async (req, res) => {
   res.json(data);
 });
 
-export const get_profiles = onRequest(async (req, res) => {
+export const getprofiles = onRequest(async (req, res) => {
   const snapshot = await db.collection("users").get()
   let datas = snapshot.docs.map((doc) => doc.data());
   res.json(datas);
 });
 
-export const post_profile = onRequest(async (req, res) => {
+export const postprofile = onRequest(async (req, res) => {
   interface Profile {
     id: string;
     displayName: string;

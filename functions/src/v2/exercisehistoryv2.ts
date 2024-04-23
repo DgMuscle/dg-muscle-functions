@@ -14,7 +14,7 @@ interface Record {
     sets: [Set];
 }
 
-export const delete_history = onRequest(async (req, res) => {
+export const deletehistory = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id = req.body.id;
 
@@ -43,7 +43,7 @@ export const delete_history = onRequest(async (req, res) => {
   });
 });
 
-export const get_histories = onRequest(async (req, res) => {
+export const gethistories = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const lastId = req.query.lastId;
   const limit = req.query.limit ?? "365";
@@ -73,7 +73,7 @@ export const get_histories = onRequest(async (req, res) => {
   res.json(data);
 });
 
-export const post_history = onRequest(async (req, res) => {
+export const posthistory = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id: string = req.body["id"];
   const date: string = req.body["date"];
