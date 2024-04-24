@@ -1,9 +1,9 @@
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
-const functions = require('firebase-functions');
+const {onRequest} = require("firebase-functions/v2/https");
 
 const db = getFirestore();
 
-exports.deletehistory = functions.https.onRequest(async (req, res) => {
+exports.deletehistory = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id = req.body.id;
 
@@ -32,7 +32,7 @@ exports.deletehistory = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.getfriendhistories = functions.https.onRequest(async (req, res) => {
+exports.getfriendhistories = onRequest(async (req, res) => {
   const friendId = req.body["friendId"];
 
   const snapshot = await db.collection("users")
@@ -47,7 +47,7 @@ exports.getfriendhistories = functions.https.onRequest(async (req, res) => {
   res.json(datas);
 });
 
-exports.gethistories = functions.https.onRequest(async (req, res) => {
+exports.gethistories = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const lastId = req.query.lastId;
   const limit = req.query.limit ?? "365";
@@ -77,7 +77,7 @@ exports.gethistories = functions.https.onRequest(async (req, res) => {
   res.json(data);
 });
 
-exports.posthistory = functions.https.onRequest(async (req, res) => {
+exports.posthistory = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id = req.body["id"];
   const date = req.body["date"];

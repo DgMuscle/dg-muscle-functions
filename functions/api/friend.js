@@ -1,10 +1,9 @@
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
-const { v4 } = require("uuid");
-const functions = require('firebase-functions');
+const {onRequest} = require("firebase-functions/v2/https");
 
 const db = getFirestore();
 
-exports.getrequests = functions.https.onRequest(async (req, res) => {
+exports.getrequests = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
         res.status(401)
@@ -22,7 +21,7 @@ exports.getrequests = functions.https.onRequest(async (req, res) => {
     res.json(datas)
 });
 
-exports.deleterequest = functions.https.onRequest(async (req, res) => {
+exports.deleterequest = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
         res.status(401)
@@ -43,7 +42,7 @@ exports.deleterequest = functions.https.onRequest(async (req, res) => {
     });
 });
 
-exports.postrequest = functions.https.onRequest(async (req, res) => {
+exports.postrequest = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
         res.status(401)
@@ -73,7 +72,7 @@ exports.postrequest = functions.https.onRequest(async (req, res) => {
     });
 });
 
-exports.getfriends = functions.https.onRequest(async (req, res) => {
+exports.getfriends = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
         res.status(401)
@@ -89,7 +88,7 @@ exports.getfriends = functions.https.onRequest(async (req, res) => {
     res.json(datas)
 });
 
-exports.post = functions.https.onRequest(async (req, res) => {
+exports.post = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
         res.status(401)
@@ -113,7 +112,7 @@ exports.post = functions.https.onRequest(async (req, res) => {
     res.json({ok: true})
 });
 
-exports.delete = functions.https.onRequest(async (req, res) => {
+exports.delete = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
         res.status(401)

@@ -1,9 +1,9 @@
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
-const functions = require('firebase-functions');
+const {onRequest} = require("firebase-functions/v2/https");
 
 const db = getFirestore();
 
-exports.deleteexercise = functions.https.onRequest(async (req, res) => {
+exports.deleteexercise = onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id = req.body["id"];
 
@@ -32,7 +32,7 @@ exports.deleteexercise = functions.https.onRequest(async (req, res) => {
   });
 });
 
-exports.getexercises = functions.https.onRequest(async (req, res) => {
+exports.getexercises = onRequest(async (req, res) => {
   const uid = req.get("uid");
 
   if (typeof uid == "undefined") {
@@ -50,7 +50,7 @@ exports.getexercises = functions.https.onRequest(async (req, res) => {
 });
 
 // Override exercise datas by exercises of req.body
-exports.setexercises = functions.https.onRequest(async (req, res) => {
+exports.setexercises = onRequest(async (req, res) => {
   const uid = req.get("uid");
   let exercises = req.body;
 
@@ -76,6 +76,57 @@ exports.setexercises = functions.https.onRequest(async (req, res) => {
 
   await Promise.all(promises);
 
+  res.json({
+    ok: true,
+  });
+});
+
+exports.postexercise = onRequest(async (req, res) => {
+  const uid = req.get("uid");
+  const exerciseId = req.body["id"];
+  const exerciseName = req.body["name"];
+  const exerciseParts = req.body["parts"] ?? [];
+  const exerciseOrder = req.body["order"];
+  const favorite = req.body["favorite"] ?? false;
+
+  if (typeof uid == "undefined") {
+    res.json({
+      ok: false,
+      message: "authentication error",
+    });
+  }
+
+  if (exerciseId == null || exerciseName == null || exerciseOrder == null) {
+    res.json({
+      ok: false,
+      message: "exercise requires id, name, order",
+    });
+  }
+
+  if (typeof(exerciseOrder) != "number") {
+    res.json({
+      ok: false,
+      message: "exercise order must be integer number",
+    });
+  }
+
+  if (typeof(favorite) != "boolean") {
+    res.json({
+      ok: false,
+      message: "favorite must be boolean",
+    });
+  }
+
+  const data = {
+    id: exerciseId,
+    name: exerciseName,
+    parts: exerciseParts,
+    order: exerciseOrder,
+    favorite,
+    createdAt: FieldValue.serverTimestamp(),
+  };
+
+  await db.collection(`users/${uid}/exercises`).doc(exerciseId).set(data);
   res.json({
     ok: true,
   });
@@ -134,54 +185,3 @@ async function deleteQueryBatch(db, query, resolve) {
     deleteQueryBatch(db, query, resolve);
   });
 }
-
-exports.postexercise = functions.https.onRequest(async (req, res) => {
-  const uid = req.get("uid");
-  const exerciseId = req.body["id"];
-  const exerciseName = req.body["name"];
-  const exerciseParts = req.body["parts"] ?? [];
-  const exerciseOrder = req.body["order"];
-  const favorite = req.body["favorite"] ?? false;
-
-  if (typeof uid == "undefined") {
-    res.json({
-      ok: false,
-      message: "authentication error",
-    });
-  }
-
-  if (exerciseId == null || exerciseName == null || exerciseOrder == null) {
-    res.json({
-      ok: false,
-      message: "exercise requires id, name, order",
-    });
-  }
-
-  if (typeof(exerciseOrder) != "number") {
-    res.json({
-      ok: false,
-      message: "exercise order must be integer number",
-    });
-  }
-
-  if (typeof(favorite) != "boolean") {
-    res.json({
-      ok: false,
-      message: "favorite must be boolean",
-    });
-  }
-
-  const data = {
-    id: exerciseId,
-    name: exerciseName,
-    parts: exerciseParts,
-    order: exerciseOrder,
-    favorite,
-    createdAt: FieldValue.serverTimestamp(),
-  };
-
-  await db.collection(`users/${uid}/exercises`).doc(exerciseId).set(data);
-  res.json({
-    ok: true,
-  });
-});
