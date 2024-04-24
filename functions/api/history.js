@@ -1,20 +1,9 @@
-import {onRequest} from "firebase-functions/v2/https";
-import {getFirestore, FieldValue} from "firebase-admin/firestore";
+const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const functions = require('firebase-functions');
 
 const db = getFirestore();
 
-interface Set {
-    weight: number;
-    unit: string;
-    reps: number;
-}
-
-interface Record {
-    exerciseId: string;
-    sets: [Set];
-}
-
-export const deletehistory = onRequest(async (req, res) => {
+exports.deletehistory = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
   const id = req.body.id;
 
@@ -43,7 +32,7 @@ export const deletehistory = onRequest(async (req, res) => {
   });
 });
 
-export const gethistories = onRequest(async (req, res) => {
+exports.gethistories = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
   const lastId = req.query.lastId;
   const limit = req.query.limit ?? "365";
@@ -73,12 +62,12 @@ export const gethistories = onRequest(async (req, res) => {
   res.json(data);
 });
 
-export const posthistory = onRequest(async (req, res) => {
+exports.posthistory = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const id: string = req.body["id"];
-  const date: string = req.body["date"];
-  const records: Record[] = req.body["records"] ?? [];
-  const memo: string | undefined = req.body["memo"];
+  const id = req.body["id"];
+  const date = req.body["date"];
+  const records = req.body["records"] ?? [];
+  const memo = req.body["memo"];
 
   if (typeof uid == "undefined") {
     res.json({
@@ -94,15 +83,7 @@ export const posthistory = onRequest(async (req, res) => {
     });
   }
 
-  interface Data {
-    id: string;
-    date: string;
-    records: Record[];
-    createdAt: FieldValue;
-    memo?: string;
-  }
-
-  const data: Data = {
+  const data = {
     id,
     date,
     records,

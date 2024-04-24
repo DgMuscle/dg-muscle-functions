@@ -1,11 +1,11 @@
-import {onRequest} from "firebase-functions/v2/https";
-import {getFirestore, FieldValue} from "firebase-admin/firestore";
+const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const functions = require('firebase-functions');
 
 const db = getFirestore();
 
-export const deleteexercise = onRequest(async (req, res) => {
+exports.deleteexercise = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const id: string = req.body["id"];
+  const id = req.body["id"];
 
   if (typeof uid == "undefined") {
     res.json({
@@ -32,7 +32,7 @@ export const deleteexercise = onRequest(async (req, res) => {
   });
 });
 
-export const getexercises = onRequest(async (req, res) => {
+exports.getexercises = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
 
   if (typeof uid == "undefined") {
@@ -50,18 +50,9 @@ export const getexercises = onRequest(async (req, res) => {
 });
 
 // Override exercise datas by exercises of req.body
-export const setexercises = onRequest(async (req, res) => {
-  interface Exercise {
-    id: string;
-    name: string;
-    parts: string[];
-    favorite: boolean;
-    order: number;
-    createdAt?: FieldValue;
-  }
-
+exports.setexercises = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
-  let exercises: Exercise[] = req.body;
+  let exercises = req.body;
 
   if (typeof uid == "undefined") {
     res.json({
@@ -96,10 +87,7 @@ export const setexercises = onRequest(async (req, res) => {
  * @param {FirebaseFirestore.Firestore} db - The db of firestore.
  * @param {string} collectionPath - The path of collection to remove
  */
-async function deleteCollection(
-  db: FirebaseFirestore.Firestore,
-  collectionPath: string
-) {
+async function deleteCollection(db,collectionPath) {
   const collectionRef = db.collection(collectionPath);
   const query = collectionRef;
 
@@ -123,11 +111,7 @@ async function deleteCollection(
  * @param {resolve} resolve - The resolve function.
  * @return {void} - Return of resulve callback.
  */
-async function deleteQueryBatch(
-  db: FirebaseFirestore.Firestore,
-  query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>,
-  resolve: (value?: unknown) => void
-) {
+async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
 
   const batchSize = snapshot.size;
@@ -151,13 +135,13 @@ async function deleteQueryBatch(
   });
 }
 
-export const postexercise = onRequest(async (req, res) => {
+exports.postexercise = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const exerciseId: string = req.body["id"];
-  const exerciseName: string = req.body["name"];
-  const exerciseParts: string[] = req.body["parts"] ?? [];
-  const exerciseOrder: number = req.body["order"];
-  const favorite: boolean = req.body["favorite"] ?? false;
+  const exerciseId = req.body["id"];
+  const exerciseName = req.body["name"];
+  const exerciseParts = req.body["parts"] ?? [];
+  const exerciseOrder = req.body["order"];
+  const favorite = req.body["favorite"] ?? false;
 
   if (typeof uid == "undefined") {
     res.json({

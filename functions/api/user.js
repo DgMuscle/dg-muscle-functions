@@ -1,9 +1,9 @@
-import {onRequest} from "firebase-functions/v2/https";
-import {getFirestore, FieldValue} from "firebase-admin/firestore";
+const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const functions = require('firebase-functions');
 
 const db = getFirestore();
 
-export const getprofile = onRequest(async (req, res) => {
+exports.getprofile = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
 
   if (typeof uid == "undefined") {
@@ -18,22 +18,15 @@ export const getprofile = onRequest(async (req, res) => {
   res.json(data);
 });
 
-export const getprofiles = onRequest(async (req, res) => {
+exports.getprofiles = functions.https.onRequest(async (req, res) => {
   const snapshot = await db.collection("users").get();
   const datas = snapshot.docs.map((doc) => doc.data());
   res.json(datas);
 });
 
-export const postprofile = onRequest(async (req, res) => {
-  interface Profile {
-    id: string;
-    displayName: string;
-    photoURL?: string;
-    updatedAt?: FieldValue;
-  }
-
+exports.postprofile = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
-  const profile: Profile = req.body;
+  const profile = req.body;
   profile.updatedAt = FieldValue.serverTimestamp();
 
   if (typeof uid == "undefined") {
@@ -47,11 +40,5 @@ export const postprofile = onRequest(async (req, res) => {
 
   res.json({
     ok: true,
-  });
-});
-
-export const test2 = onRequest(async (req, res) => {
-  res.json({
-    ok: false,
   });
 });
