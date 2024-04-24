@@ -13,4 +13,4 @@ const {initializeApp} = require("firebase-admin/app");
 
 initializeApp()
 
-exports.history = require("./api/history");
+exports.v3history = require("./api/history");
