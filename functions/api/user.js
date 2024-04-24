@@ -11,6 +11,7 @@ exports.getprofile = functions.https.onRequest(async (req, res) => {
       ok: false,
       message: "authentication error",
     });
+    return
   }
 
   const snapshot = await db.collection("users").doc(uid ?? "").get();
