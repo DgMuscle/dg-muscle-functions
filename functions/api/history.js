@@ -32,6 +32,21 @@ exports.deletehistory = functions.https.onRequest(async (req, res) => {
   });
 });
 
+exports.getfriendhistories = functions.https.onRequest(async (req, res) => {
+  const friendId = req.body["friendId"];
+
+  const snapshot = await db.collection("users")
+  .doc(friendId)
+  .collection("histories")
+  .orderBy("date", "desc")
+  .limit(100)
+  .get();
+
+  const datas = snapshot.docs.map((doc) => doc.data());
+
+  res.json(datas);
+});
+
 exports.gethistories = functions.https.onRequest(async (req, res) => {
   const uid = req.get("uid");
   const lastId = req.query.lastId;
