@@ -13,7 +13,7 @@ const {initializeApp} = require("firebase-admin/app");
 
 initializeApp()
 
-exports.v3exercise = require("./api/exercise");
-exports.v3friend = require("./api/friend");
-exports.v3history = require("./api/history");
-exports.v3user = require("./api/user");
+exports.v4exercise = require("./api/exercise");
+exports.v4friend = require("./api/friend");
+exports.v4history = require("./api/history");
+exports.v4user = require("./api/user");
