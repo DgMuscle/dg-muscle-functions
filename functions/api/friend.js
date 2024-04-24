@@ -4,25 +4,57 @@ const functions = require('firebase-functions');
 
 const db = getFirestore();
 
-exports.postrequest = functions.https.onRequest(async( req, res) => {
+exports.getrequests = functions.https.onRequest(async (req, res) => {
     const uid = req.get("uid");
+    if (uid == undefined) {
+        res.status(401)
+        return
+    }
+
+    let snapshot = await db
+    .collection("users")
+    .doc(uid)
+    .collection("friend_requests")
+    .get();
+
+    let datas = snapshot.docs.map((doc) => doc.data());
+
+    res.json(datas)
+});
+
+exports.deleterequest = functions.https.onRequest(async (req, res) => {
+    const uid = req.get("uid");
+    if (uid == undefined) {
+        res.status(401)
+        return
+    }
+
+    const deleteId = req.body["deleteId"];
+
+    await db
+    .collection("users")
+    .doc(uid)
+    .collection("friend_requests")
+    .doc(deleteId)
+    .delete()
+
+    res.json({
+        ok: true
+    });
+});
+
+exports.postrequest = functions.https.onRequest(async (req, res) => {
+    const uid = req.get("uid");
+    if (uid == undefined) {
+        res.status(401)
+        return
+    }
 
     const fromId = uid;
     const toId = req.body["toId"];
 
-    if (uid == undefined) {
-        res.json({
-            ok: false,
-            message: "authentication error"
-        })
-        return
-    }
-
     if (toId == undefined || toId == null) {
-        res.status(400).json({
-            ok: false,
-            message: "not enough parameter"
-        })
+        res.status(400)
         return
     }
 
