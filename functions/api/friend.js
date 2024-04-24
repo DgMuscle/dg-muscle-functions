@@ -72,3 +72,60 @@ exports.postrequest = functions.https.onRequest(async (req, res) => {
         ok: true
     });
 });
+
+exports.getfriends = functions.https.onRequest(async (req, res) => {
+    const uid = req.get("uid");
+    if (uid == undefined) {
+        res.status(401)
+        return
+    }
+
+    const snapshot = await db.collection("users")
+    .doc(uid)
+    .collection("friends")
+    .get();
+
+    const datas = snapshot.docs.map((doc) => doc.data());
+    res.json(datas)
+});
+
+exports.post = functions.https.onRequest(async (req, res) => {
+    const uid = req.get("uid");
+    if (uid == undefined) {
+        res.status(401)
+        return
+    }
+
+    const friendId = req.body["friendId"];
+
+    await db.collection("users")
+    .doc(uid)
+    .collection("friends")
+    .doc(friendId)
+    .set();
+
+    await db.collection("users")
+    .doc(uid)
+    .collection("friend_requests")
+    .doc(friendId)
+    .delete();
+
+    res.json({ok: true})
+});
+
+exports.delete = functions.https.onRequest(async (req, res) => {
+    const uid = req.get("uid");
+    if (uid == undefined) {
+        res.status(401)
+        return
+    }
+
+    const friendId = req.body["friendId"];
+    await db.collection("users")
+    .doc(uid)
+    .collection("friends")
+    .doc(friendId)
+    .delete();
+
+    res.json({ok: true})
+});
