@@ -102,7 +102,7 @@ exports.post = functions.https.onRequest(async (req, res) => {
     .doc(uid)
     .collection("friends")
     .doc(friendId)
-    .set();
+    .set({uid: friendId});
 
     await db.collection("users")
     .doc(uid)
