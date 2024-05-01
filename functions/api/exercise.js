@@ -86,7 +86,6 @@ exports.postexercise = onRequest(async (req, res) => {
   const exerciseId = req.body["id"];
   const exerciseName = req.body["name"];
   const exerciseParts = req.body["parts"] ?? [];
-  const exerciseOrder = req.body["order"];
   const favorite = req.body["favorite"] ?? false;
 
   if (typeof uid == "undefined") {
@@ -96,17 +95,10 @@ exports.postexercise = onRequest(async (req, res) => {
     });
   }
 
-  if (exerciseId == null || exerciseName == null || exerciseOrder == null) {
+  if (exerciseId == null || exerciseName == null) {
     res.json({
       ok: false,
       message: "exercise requires id, name, order",
-    });
-  }
-
-  if (typeof(exerciseOrder) != "number") {
-    res.json({
-      ok: false,
-      message: "exercise order must be integer number",
     });
   }
 
@@ -121,7 +113,6 @@ exports.postexercise = onRequest(async (req, res) => {
     id: exerciseId,
     name: exerciseName,
     parts: exerciseParts,
-    order: exerciseOrder,
     favorite,
     createdAt: FieldValue.serverTimestamp(),
   };
