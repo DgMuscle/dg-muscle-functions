@@ -98,7 +98,7 @@ exports.postexercise = onRequest(async (req, res) => {
   if (exerciseId == null || exerciseName == null) {
     res.json({
       ok: false,
-      message: "exercise requires id, name, order",
+      message: "exercise requires id, name",
     });
   }
 
