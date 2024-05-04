@@ -1,4 +1,5 @@
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const { getMessaging } = require("firebase-admin/messaging");
 const {onRequest} = require("firebase-functions/v2/https");
 
 const db = getFirestore();
@@ -80,6 +81,21 @@ exports.postrequest = onRequest(async (req, res) => {
     });
 
     // push notification to opponent
+    const sender = (await db.collection("users").doc(uid).get()).data()
+    const receiver = (await db.collection("users").doc(toId).get()).data()
+    if (receiver.fcmtoken != null ) {
+        const message = {
+            notification: {
+                title: `Friend Request`,
+                body: `${sender.displayName ?? sender.id} send friend request`
+            },
+            data: {
+                destination: "friend_request"
+            },
+            token: `${receiver.fcmtoken}`
+        }
+        getMessaging().send(message)
+    }
 
     res.json({
         ok: true
