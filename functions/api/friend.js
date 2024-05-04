@@ -67,6 +67,8 @@ exports.postrequest = onRequest(async (req, res) => {
         createdAt: FieldValue.serverTimestamp()
     });
 
+    // push notification to opponent
+
     res.json({
         ok: true
     });
