@@ -6,7 +6,10 @@ const db = getFirestore();
 exports.getrequests = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
-        res.status(401)
+        res.status(401).json({
+            ok: false,
+            message: "Not authorized"
+        })
         return
     }
 
@@ -24,7 +27,10 @@ exports.getrequests = onRequest(async (req, res) => {
 exports.deleterequest = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
-        res.status(401)
+        res.status(401).json({
+            ok: false,
+            message: "Not authorized"
+        })
         return
     }
 
@@ -45,7 +51,10 @@ exports.deleterequest = onRequest(async (req, res) => {
 exports.postrequest = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
-        res.status(401)
+        res.status(401).json({
+            ok: false,
+            message: "Not authorized"
+        })
         return
     }
 
@@ -53,7 +62,10 @@ exports.postrequest = onRequest(async (req, res) => {
     const toId = req.body["toId"];
 
     if (toId == undefined || toId == null) {
-        res.status(400)
+        res.status(400).json({
+            ok: false,
+            message: "Empty parameter"
+        })
         return
     }
 
@@ -77,7 +89,10 @@ exports.postrequest = onRequest(async (req, res) => {
 exports.getfriends = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
-        res.status(401)
+        res.status(401).json({
+            ok: false,
+            message: "Not authorized"
+        })
         return
     }
 
@@ -93,7 +108,10 @@ exports.getfriends = onRequest(async (req, res) => {
 exports.post = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
-        res.status(401)
+        res.status(401).json({
+            ok: false,
+            message: "Not authorized"
+        })
         return
     }
 
@@ -117,7 +135,10 @@ exports.post = onRequest(async (req, res) => {
 exports.delete = onRequest(async (req, res) => {
     const uid = req.get("uid");
     if (uid == undefined) {
-        res.status(401)
+        res.status(401).json({
+            ok: false,
+            message: "Not authorized"
+        })
         return
     }
 
