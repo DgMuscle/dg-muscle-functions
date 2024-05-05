@@ -33,7 +33,7 @@ exports.deletehistory = onRequest(async (req, res) => {
 });
 
 exports.getfriendhistories = onRequest(async (req, res) => {
-  const friendId = req.body["friendId"];
+  const friendId = req.query.friendId;
 
   const snapshot = await db.collection("users")
   .doc(friendId)
