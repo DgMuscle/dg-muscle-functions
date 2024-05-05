@@ -39,7 +39,7 @@ exports.getfriendhistories = onRequest(async (req, res) => {
   .doc(friendId)
   .collection("histories")
   .orderBy("date", "desc")
-  .limit(100)
+  .limit(365)
   .get();
 
   const datas = snapshot.docs.map((doc) => doc.data());
