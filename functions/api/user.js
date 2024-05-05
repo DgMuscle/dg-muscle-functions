@@ -3,6 +3,13 @@ const {onRequest} = require("firebase-functions/v2/https");
 
 const db = getFirestore();
 
+exports.getprofilefromuid = onRequest(async(req, res) => {
+  const uid = req.query.uid;
+  const snapshot = await db.collection("users").doc(uid).get();
+  const data = snapshot.data();
+  res.json(data)
+});
+
 exports.getprofile = onRequest(async (req, res) => {
   const uid = req.get("uid");
 
