@@ -49,6 +49,23 @@ exports.getexercises = onRequest(async (req, res) => {
   res.json(data);
 });
 
+exports.getexercisesfromuid = onRequest(async (req, res) => {
+  const uid = req.query.uid;
+
+  if (uid == undefined) {
+    res.json({
+      ok: false,
+      message: "need uid"
+    })
+  }
+
+  const ref = db.collection("users").doc(uid ?? "").collection("exercises");
+  const snapshot = await ref.get();
+  const data = snapshot.docs.map((doc) => doc.data());
+
+  res.json(data);
+});
+
 // Override exercise datas by exercises of req.body
 exports.setexercises = onRequest(async (req, res) => {
   const uid = req.get("uid");
