@@ -145,6 +145,23 @@ exports.post = onRequest(async (req, res) => {
     .doc(friendId)
     .delete();
 
+    // friendId 한테 푸시메시지
+    const sender = (await db.collection("users").doc(uid).get()).data()
+    const receiver = (await db.collection("users").doc(friendId).get()).data()
+    if (receiver.fcmtoken != null ) {
+        const message = {
+            notification: {
+                title: `Friend Accepted`,
+                body: `${sender.displayName ?? sender.id} accepted friend request`
+            },
+            data: {
+                destination: "friend_list"
+            },
+            token: `${receiver.fcmtoken}`
+        }
+        getMessaging().send(message)
+    }
+
     res.json({ok: true})
 });
 
