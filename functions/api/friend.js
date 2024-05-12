@@ -145,6 +145,12 @@ exports.post = onRequest(async (req, res) => {
     .doc(friendId)
     .delete();
 
+    await db.collection("users")
+    .doc(friendId)
+    .collection("friends")
+    .doc(uid)
+    .set({uid: uid})
+
     // friendId 한테 푸시메시지
     const sender = (await db.collection("users").doc(uid).get()).data()
     const receiver = (await db.collection("users").doc(friendId).get()).data()
