@@ -188,5 +188,11 @@ exports.delete = onRequest(async (req, res) => {
     .doc(friendId)
     .delete();
 
+    await db.collection("users")
+    .doc(friendId)
+    .collection("friends")
+    .doc(uid)
+    .delete();
+
     res.json({ok: true})
 });
