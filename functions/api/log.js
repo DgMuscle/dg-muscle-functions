@@ -7,6 +7,7 @@ const db = getFirestore();
 
 exports.postlog = onRequest(async (req, res) => {
     let body = req.body;
+    body.createdAt = FieldValue.serverTimestamp();
     let id = body.id;
 
     if (id == null) {
@@ -23,7 +24,7 @@ exports.postlog = onRequest(async (req, res) => {
 
     const tokens = developers.map((user) => (user.fcmtoken));
 
-    const messages = tokens.map((token) => {
+    let messages = tokens.map((token) => {
         return {
             notification: {
                 title: `DG Log`,
@@ -32,9 +33,11 @@ exports.postlog = onRequest(async (req, res) => {
             data: {
                 destination: "logs"
             },
-            token
+            token: token
         }
     });
+
+    messages = messages.filter((message) => (message.token != null));
 
     getMessaging().sendEach(messages);
 
