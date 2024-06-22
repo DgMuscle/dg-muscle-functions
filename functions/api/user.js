@@ -50,3 +50,22 @@ exports.postprofile = onRequest(async (req, res) => {
     ok: true,
   });
 });
+
+exports.deleteaccount = onRequest(async (req, res) => {
+  const uid = req.get("uid");
+
+  if (typeof uid == "undefined") {
+    res.json({
+      ok: false,
+      message: "authentication error",
+    });
+  }
+
+  const snapshot = await db.collection("users").doc(uid ?? "").get();
+  const data = snapshot.data();
+  data.deleted = true;
+  db.collection("users").doc(uid ?? "").set(data);
+  res.json({
+    ok: true
+  });
+});
