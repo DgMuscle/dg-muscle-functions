@@ -52,7 +52,7 @@ exports.getlogs = onRequest(async (req, res) => {
     const user = userSnapshot.data();
 
     if (user.developer == true) {
-        let logSnapshot = await db.collection("logs").get();
+        let logSnapshot = await db.collection("logs").orderBy("createdAt", "desc").get();
         let documents = logSnapshot.docs
         let data = documents.map((doc) => (doc.data()));
         res.json(data);
