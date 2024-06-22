@@ -70,6 +70,32 @@ exports.postrequest = onRequest(async (req, res) => {
         return
     }
 
+    // 이미 친구이거나 삭제된 계정이라면 거절
+    let friendsSnapshot = await db.collection("users").doc(uid).collection("friends").get();
+    let friends = friendsSnapshot.docs.map((doc) => (doc.data()));
+    let friendsIds = friends.map((friend) => (friend.uid));
+
+    // 특정 문자열이 friendsIds 배열에 포함되어 있는지 확인
+    let isIncluded = friendsIds.includes(toId);
+
+    if (isIncluded) {
+        res.json({
+            ok: false,
+            message: "Already friend"
+        });
+        return
+    }
+
+    let opponent = (await db.collection("users").doc(toId).get()).data();
+
+    if (opponent.deleted == true) {
+        res.json({
+            ok: false,
+            message: "Deleted Account"
+        });
+        return
+    }
+
     await db
     .collection("users")
     .doc(toId)
