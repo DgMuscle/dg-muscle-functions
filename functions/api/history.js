@@ -103,12 +103,15 @@ exports.posthistory = onRequest(async (req, res) => {
     id,
     date,
     records,
-    run,
     createdAt: FieldValue.serverTimestamp(),
   };
 
   if (memo != undefined) {
     data.memo = memo;
+  }
+
+  if (run != undefined) {
+    data.run = run;
   }
 
   await db.collection(`users/${uid}/histories`).doc(id).set(data);
