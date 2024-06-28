@@ -83,7 +83,7 @@ exports.posthistory = onRequest(async (req, res) => {
   const date = req.body["date"];
   const records = req.body["records"] ?? [];
   const memo = req.body["memo"];
-  const run = req.body["run"];
+  const runV2 = req.body["runV2"];
 
   if (typeof uid == "undefined") {
     res.json({
@@ -110,8 +110,8 @@ exports.posthistory = onRequest(async (req, res) => {
     data.memo = memo;
   }
 
-  if (run != undefined) {
-    data.run = run;
+  if (runV2 != runV2) {
+    data.runV2 = runV2;
   }
 
   await db.collection(`users/${uid}/histories`).doc(id).set(data);
