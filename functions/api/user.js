@@ -23,7 +23,13 @@ exports.getprofile = onRequest(async (req, res) => {
 
   const snapshot = await db.collection("users").doc(uid ?? "").get();
   const data = snapshot.data();
-  res.json(data);
+  if (data.id == undefined || data.id == null) {
+    res.json({
+      id: uid
+    });
+  } else {
+    res.json(data);
+  }
 });
 
 exports.getprofiles = onRequest(async (req, res) => {
