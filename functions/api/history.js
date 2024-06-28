@@ -110,7 +110,7 @@ exports.posthistory = onRequest(async (req, res) => {
     data.memo = memo;
   }
 
-  if (runV2 != runV2) {
+  if (runV2 != undefined) {
     data.runV2 = runV2;
   }
 
