@@ -109,7 +109,7 @@ exports.postrequest = onRequest(async (req, res) => {
     // push notification to opponent
     const sender = (await db.collection("users").doc(uid).get()).data()
     const receiver = (await db.collection("users").doc(toId).get()).data()
-    if (receiver.fcmtoken != null ) {
+    if (receiver.fcmToken != null ) {
         const message = {
             notification: {
                 title: `Friend Request`,
@@ -118,7 +118,7 @@ exports.postrequest = onRequest(async (req, res) => {
             data: {
                 destination: "friend_request"
             },
-            token: `${receiver.fcmtoken}`
+            token: `${receiver.fcmToken}`
         }
         getMessaging().send(message)
     }
@@ -180,7 +180,7 @@ exports.post = onRequest(async (req, res) => {
     // friendId 한테 푸시메시지
     const sender = (await db.collection("users").doc(uid).get()).data()
     const receiver = (await db.collection("users").doc(friendId).get()).data()
-    if (receiver.fcmtoken != null ) {
+    if (receiver.fcmToken != null ) {
         const message = {
             notification: {
                 title: `Friend Accepted`,
@@ -189,7 +189,7 @@ exports.post = onRequest(async (req, res) => {
             data: {
                 destination: "friend_list"
             },
-            token: `${receiver.fcmtoken}`
+            token: `${receiver.fcmToken}`
         }
         getMessaging().send(message)
     }

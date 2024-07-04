@@ -22,7 +22,7 @@ exports.postlog = onRequest(async (req, res) => {
         return user.developer == true
     });
 
-    const tokens = developers.map((user) => (user.fcmtoken));
+    const tokens = developers.map((user) => (user.fcmToken));
 
     let messages = tokens.map((token) => {
         return {
