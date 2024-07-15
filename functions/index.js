@@ -18,3 +18,4 @@ exports.v4friend = require("./api/friend");
 exports.v4history = require("./api/history");
 exports.v4user = require("./api/user");
 exports.v4log = require("./api/log");
+exports.rapidapi = require("./api/rapid");
