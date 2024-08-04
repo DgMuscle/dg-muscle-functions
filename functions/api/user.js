@@ -7,6 +7,21 @@ exports.getprofilefromuid = onRequest(async(req, res) => {
   const uid = req.query.uid;
   const snapshot = await db.collection("users").doc(uid).get();
   const data = snapshot.data();
+
+  if (data == undefined) {
+    res.json({
+      id: uid
+    })
+    return
+  }
+
+  if (data.id == undefined || data.id == null) {
+    res.json({
+      id: uid
+    })
+    return
+  }
+
   res.json(data)
 });
 
